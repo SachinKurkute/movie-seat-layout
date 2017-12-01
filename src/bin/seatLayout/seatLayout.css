@@ -59,3 +59,35 @@
     margin-right: 10px;
     color: green;
   }
+  .seat-selection .movie-screen{
+    width: 100%;
+    text-align: center;
+    margin: 60px 0px 15px 0px;
+    font-size: 0.8em;
+    color: #626573;
+    box-shadow: inset 0px 7px 12px 0px #9c9c9c;
+  }
+  .seat-selection .seat-proccess-panel{
+    padding: 10px;
+    border-top: 3px solid #009486;
+    text-align: right;
+  }
+  .seat-selection .layout-action-btn{
+    padding: 5px 20px;
+    color: #fff;
+    cursor: pointer;
+    background-color: burlywood;
+    border: 1px solid #e7e7e7;
+    box-shadow: 0px 2px 5px 0px #2b2b2b;
+    border-radius: 2px;
+  }
+  .seat-selection .layout-action-btn[disabled]{
+    box-shadow: none;
+    background-color: #b1b1b1 !important;
+    border-color: #828282 !important;
+    cursor: not-allowed;
+  }
+  .seat-selection .layout-action-btn.layout-btn-done{
+    border: 1px solid #7ca07d;
+    background-color: #228b22;
+  }
