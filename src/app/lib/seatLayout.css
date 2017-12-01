@@ -20,7 +20,7 @@
       height: 18px;
       margin: 2px;
       vertical-align: -webkit-baseline-middle;
-      border-radius: 5px;
+      border-radius: 2px;
   }
   
   .seat-selection .seat-row-seat span{
@@ -29,7 +29,7 @@
       height: 14px;
       margin: 1px 0px 0px 1px;
       background: #b9b9b9;
-      border-radius: 5px;
+      border-radius: 2px;
       border: 1px solid #ffffff;
   }
   
@@ -44,8 +44,18 @@
   .seat-selection .seat-row-seat.can-select span{
     background-color:#fff;
     font-size:0.8em;
-    
+  }
+
+  .seat-selection .seat-row-seat.current-selected.can-select span{
+    background-color:#41db41;
+  }
+  .seat-selection .seat-row-seat.current-selected.can-select:hover span{
+    background-color:#41db41;
   }
   .seat-selection .seat-row-seat.can-select:hover span{
     background-color:#dcdcdc;
+  }
+  .seat-selection .row-indicator{
+    margin-right: 10px;
+    color: green;
   }
