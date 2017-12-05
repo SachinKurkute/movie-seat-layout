@@ -3,9 +3,9 @@
 * Copyright (c) 2017 Sachin Kurkute
 * MIT License : https://github.com/SachinKurkute/movie-seat-layout/blob/master/LICENSE
 */
-(function () {
+(function ($) {
     function Movieseat(_paramObject) {
-        var maxSeat, minSeat;
+        var maxSeat, minSeat, pluginOptions = $.extend({},_paramObject.options);
         var getMainLayoutFunc = function (_obj) {
             maxSeat = _obj.intMaxSeatId;
             minSeat = _obj.intMinSeatId;
@@ -13,11 +13,12 @@
             for (var i = 0; i < _obj.objArea.length; i++) {
                 _html += getAreaLayoutFunc(_obj.objArea[i]);
             }
-            _html += "<div class='movie-screen'>-- Screen --</div><div class='seat-proccess-panel'> <button type='button' class='layout-action-btn layout-btn-cancel'> Cancel </button> <button type='button' class='layout-action-btn layout-btn-done'> Done </button> </div></div>";
+            var actionPanel = pluginOptions.showActionButtons?"<div class='seat-proccess-panel'> <button  type='button' class='layout-action-btn layout-btn-cancel  "+ pluginOptions.classes.cancelBtn +"'> Cancel </button> <button type='button' class='layout-action-btn layout-btn-done "+ pluginOptions.classes.doneBtn +"'> Done </button> </div>":"";
+            _html += "<div class='movie-screen "+ pluginOptions.classes.screen +"'>-- Screen --</div>"+ actionPanel +"</div>";
             return _html;
         }
         var getAreaLayoutFunc = function (_obj) {
-            var _html = "<div class='seat-area'>";
+            var _html = "<div class='seat-area "+ pluginOptions.classes.area +"'>";
             _html += "<div class='seat-area-desc'>" + _obj.AreaDesc + "</div>";
             for (var i = 0; i < _obj.objRow.length; i++) {
                 _html += getRowLayoutFunc(_obj.objRow[i], _obj);
@@ -26,7 +27,7 @@
             return _html;
         }
         var getRowLayoutFunc = function (_obj, _area) {
-            var _html = "<ul class='seat-area-row'> <li class='seat-row-seat row-indicator'>" + _obj.PhyRowId + "</li>";
+            var _html = "<ul class='seat-area-row "+ pluginOptions.classes.row +"'> <li class='seat-row-seat row-indicator'>" + _obj.PhyRowId + "</li>";
             var totalSpace = 0;
             for (var i = 0; i < _obj.objSeat.length; i++) {
                 if (i == 0) {
@@ -64,14 +65,14 @@
             _obj = _paramObject.callSeatRender(_obj);
             if (_obj) {
                 var dataString = JSON.stringify(_obj);
+                var classes = pluginOptions.classes.seat;
                 if (isSeat) {
-                    var classes = "";
                     if (_obj && _obj.SeatStatus == "0") {
                         classes += " can-select";
                     }
                     return "<li data-seatdefination='" + dataString + "' class='seat-row-seat seat-yes " + classes + " '><span></span></li>";
                 } else {
-                    return "<li class='seat-row-seat'></li>";
+                    return "<li class='seat-row-seat " + classes + "'></li>";
                 }
             }
         }
@@ -82,25 +83,36 @@
             getMainLayout: getMainLayoutFunc
         }
     }
-    $.fn.seatLayout = function (_obj) {
-        var _default = {
-            type: 'movie',
-            toSelect: 1
-        };
+    $.fn.seatLayout = function (_options) {
+        var _optionsObj = $.extend(true,{},{
+            type:'movie',
+            showActionButtons:true,
+            classes : {
+                doneBtn : '',
+                cancelBtn : '',
+                seat:'',
+                row:'',
+                area:'',
+                screen:''
+            },
+            numberOfSeat:1
+        },_options);
+        console.log(_optionsObj);
         var selectedSeats = [];
-        var nuberOfSeat = _obj.numberOfSeat;
+        var nuberOfSeat = _optionsObj.numberOfSeat;
         var tempSelected = 0;
         var _el = this;
         var _html = "";
         var seatInstance = new Movieseat({
             callSeatRender: function (_seatObj) {
-                if (_obj.callOnSeatRender) {
-                    return _obj.callOnSeatRender(_seatObj);
+                if (_optionsObj.callOnSeatRender) {
+                    return _optionsObj.callOnSeatRender(_seatObj);
                 }
                 return _seatObj;
-            }
+            },
+            options : _optionsObj
         });
-        _html = seatInstance.getMainLayout(_obj.data.seatLayout.colAreas);
+        _html = seatInstance.getMainLayout(_optionsObj.data.seatLayout.colAreas);
         _el.html(_html);
         function getObjData(_ele) {
             return _ele.data('seatdefination');
@@ -126,29 +138,29 @@
                 }
                 tempSelected = count;
                 _el.find('.layout-btn-done').prop('disabled', !(nuberOfSeat == selectedSeats.length));
-                var dataToPass = getObjData($(this));
+                var dataToPass = $.extend({}, getObjData($(this)));
                 dataToPass.selected = selectedSeats;
-                _obj.callOnSeatSelect(e, dataToPass, this);
+                _optionsObj.callOnSeatSelect(e, dataToPass, this);
             }
         });
 
         _el.find('.layout-btn-done').prop('disabled', true);
         _el.find('.layout-btn-done').click(function (e) {
-            if (_obj.selectionDone) {
-                _obj.selectionDone({ "selected": selectedSeats });
+            if (_optionsObj.selectionDone) {
+                _optionsObj.selectionDone({ "selected": selectedSeats });
             }
         });
         _el.find('.layout-btn-cancel').click(function (e) {
             returnFlag = true;
-            if (_obj.cancel) {
-                returnFlag = _obj.cancel(e) == false ? false : true;
+            if (_optionsObj.cancel) {
+                returnFlag = _optionsObj.cancel(e) == false ? false : true;
             }
             if (returnFlag) {
                 $(_el).remove();
                 seatInstance = null;
-                _obj = null;
+                _optionsObj = null;
             }
         });
         return this;
     };
-})();
+})(jQuery);
