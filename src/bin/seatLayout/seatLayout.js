@@ -13,7 +13,7 @@
             for (var i = 0; i < _obj.objArea.length; i++) {
                 _html += getAreaLayoutFunc(_obj.objArea[i]);
             }
-            _html += "<div class='movie-screen'>-- Screen --</div><div class='seat-proccess-panel'> <button class='layout-action-btn layout-btn-cancel'> Cancel </button> <button class='layout-action-btn layout-btn-done'> Done </button> </div></div>";
+            _html += "<div class='movie-screen'>-- Screen --</div><div class='seat-proccess-panel'> <button type='button' class='layout-action-btn layout-btn-cancel'> Cancel </button> <button type='button' class='layout-action-btn layout-btn-done'> Done </button> </div></div>";
             return _html;
         }
         var getAreaLayoutFunc = function (_obj) {
