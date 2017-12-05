@@ -97,7 +97,6 @@
             },
             numberOfSeat:1
         },_options);
-        console.log(_optionsObj);
         var selectedSeats = [];
         var nuberOfSeat = _optionsObj.numberOfSeat;
         var tempSelected = 0;
